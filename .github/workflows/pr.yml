@@ -13,7 +13,7 @@ jobs:
         with:
           repository: julianburr/github-actions
           token: ${{ secrets.GITHUB_TOKEN }}
-          path: .github/actions/custom-actions
+          path: ./.github/actions/custom-actions
 
       - name: Use Node.js
         uses: actions/setup-node@v1
@@ -30,7 +30,7 @@ jobs:
           yarn typecheck
 
       - name: Deploy via Vercel
-        uses: .github/actions/custom-actions/deploy-vercel
+        uses: ./.github/actions/custom-actions/deploy-vercel
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
