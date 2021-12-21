@@ -1,3 +1,4 @@
+import { HTMLProps, PropsWithChildren } from "react";
 import styled from "styled-components";
 
 const Button = styled.button`
@@ -40,7 +41,7 @@ const Button = styled.button`
   }
 `;
 
-export function CloseButton(props) {
+export function CloseButton(props: any) {
   return (
     <Button {...props}>
       <span />

@@ -1,10 +1,7 @@
 import { HTMLProps, PropsWithChildren } from "react";
 import styled from "styled-components";
 
-type HamburgerButtonProps = HTMLProps<HTMLButtonElement>;
-type ButtonProps = PropsWithChildren<HamburgerButtonProps>;
-
-const Button = styled.button<ButtonProps>`
+const Button = styled.button`
   display: flex;
   width: 3.2rem;
   height: 3.2rem;
@@ -57,7 +54,7 @@ const Button = styled.button<ButtonProps>`
   }
 `;
 
-export function HamburgerButton(props: HamburgerButtonProps) {
+export function HamburgerButton(props: any) {
   return (
     <Button {...props}>
       <span />
