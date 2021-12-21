@@ -1,0 +1,43 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy_production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checkout GitHub Actions Repo
+        uses: actions/checkout@v2
+        with:
+          repository: julianburr/github-actions
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: .github/actions/custom-actions
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+
+      - name: Install dependencies
+        run: |-
+          yarn
+
+      - name: Linting and typechecks
+        run: |-
+          yarn lint
+          yarn typecheck
+
+      - name: Deploy via Vercel
+        uses: .github/actions/custom-actions/deploy-vercel
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
+          vercel-token: ${{ secrets.VERCEL_TOKEN}}
+          is-production: true
+          add-comment: false
