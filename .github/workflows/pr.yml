@@ -20,9 +20,12 @@ jobs:
         with:
           node-version: "14.x"
 
+      - name: Use node modules from cache if available
+        uses: ./.github/actions/custom-actions/cache-node-modules
+
       - name: Install dependencies
         run: |-
-          yarn
+          yarn install --frozen-lockfile
 
       - name: Linting and typechecks
         run: |-
