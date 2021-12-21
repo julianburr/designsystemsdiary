@@ -37,3 +37,7 @@ jspm_packages
 .node_repl_history
 .next
 .vercel
+
+# Misc
+.DS_Store
+tsconfig.tsbuildinfo
