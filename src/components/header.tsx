@@ -34,6 +34,7 @@ const Container = styled.header<{ active: boolean }>`
     padding: 0;
     font-family: Staatliches;
     display: ${(props) => (props.active ? "flex" : "none")};
+    flex: 1;
     align-items: center;
     justify-content: center;
     position: fixed;
@@ -43,6 +44,7 @@ const Container = styled.header<{ active: boolean }>`
 
     ${BREAKPOINTS.TABLET} {
       display: flex;
+      justify-content: flex-end;
       position: relative;
       background: transparent;
       color: inherit;
@@ -113,6 +115,20 @@ const Container = styled.header<{ active: boolean }>`
   }
 `;
 
+const SkipLink = styled.a`
+  display: flex;
+  font-family: Staatliches;
+  margin: 0 0 0 2.4rem;
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  opacity: 0;
+
+  &:focus {
+    opacity: 1;
+  }
+`;
+
 export function Header() {
   const [active, setActive] = useState(false);
   const router = useRouter();
@@ -128,6 +144,8 @@ export function Header() {
   return (
     <Container active={active}>
       <h1>Design Systems Diary</h1>
+
+      <SkipLink href="#main-content">Skip navigation</SkipLink>
 
       <menu>
         <CloseButton
