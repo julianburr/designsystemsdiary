@@ -35,6 +35,10 @@ jobs:
           yarn lint
           yarn typecheck
 
+      - name: Create .env
+        run: |-
+          echo "NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ secrets.GOOGLE_ANALYTICS_ID }}" > .env
+
       - name: Deploy via Vercel
         uses: ./.github/actions/custom-actions/deploy-vercel
         with:

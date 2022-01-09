@@ -38,6 +38,9 @@ jspm_packages
 .next
 .vercel
 
+# Env
+.env.local
+
 # Misc
 .DS_Store
 tsconfig.tsbuildinfo
