@@ -3,6 +3,7 @@ import { ServerStyleSheet } from "styled-components";
 import Document from "next/document";
 
 export default class MyDocument extends Document {
+  // The below ensures SSR for styled components works as expected
   static async getInitialProps(context: any) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = context.renderPage;
