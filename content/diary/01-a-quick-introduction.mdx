@@ -1,0 +1,68 @@
+---
+part: 1
+title: A Quick Introduction
+tags: Introduction
+---
+
+## Disclaimer
+
+This is going to be a blog post series about our learnings at rexlabs building a design system, mostly from my perspective as a developer. At the end of each of these blog posts, you can find a TL;DR with the lessons we learned. But I hope the articles themselves will also give you some interesting insights into the problems we encountered and the ways we dealt with them.
+
+The intention is not to tell you how exactly you should go about building your own design system. It really is more about us sharing our experience, hoping others may find it helpful on their journey. At the time of writing, I wouldn't even say we ourselves are in a position where we successfully implemented a stable and future proof system yet. We just started that adventure.
+
+Also, always remember: your objectives and requirements might differ from ours, so take everything here with a grain of salt and see how the lessons we learned might relate to your specific situation.
+
+---
+
+## A bit of context
+
+Alright, let's start by setting the scene. At rexlabs, we've got a bit of a history working on design systems. When I started as a developer a few years ago, our team around dev 🥑 star [Lochlan Bunn](https://twitter.com/loklaan) had just begun to build a component library. At the time we were only running a few products, none of them used React heavily yet. But still, we already envisioned this central hub for all our components and UI work, that we could easily share and improve on over time.
+
+The primary goal was to close the bridge between design and development, creating standards and documentation to improve the quality and speed of delivery. We wanted to enable the teams to focus more on the products they were building, instead of the individual components and pages.
+
+We didn't just build a component library. There were a lot of other aspects we tried to focus on as part of this.
+
+- **Building a toolkit** — The cornerstone of all work we are doing. A JS toolkit that allows us to quickly bootstrap and build new npm packages and apps. To have all setup and configuration in a central place and (for the most part) not having to worry about any of it during the actual development work is a life changer!
+- **Abstracting out common functionality as modules** — Beyond components, there are many more repetitive tasks across projects and can quickly grow out of hand if not maintained centrally. For example handling backend data in your frontend UI, forms, routing, animations (especially those requiring JS, which should be kept to a minimum but can't always be avoided in SPAs, e.g. enter and leave transitions for components, etc).
+- **Styling** — This is probably the most important one on our way to a proper design system. Reusable components are great, but if you can't easily apply different styles for different brands to them, they are not very useful when you're trying to build multiple products. CSS helps with that but comes with its own problems. So we worked on a custom based solution that sits on top of a CSS-in-JS library of our choice and deals with the more complex parts of the theming.
+
+## Start with the “why?”
+
+As shown before, we had some initial goals when we started building the component library.
+
+- **Improved developer experience** — This should be at least part of the core motivation. A good developer experience will lead to happier and more efficient developers, more stable products, and overall faster turnarounds.
+- **Better communication** — Closing the bridge between design and development is key, not only from a process perspective but also from a language standpoint. Speaking a common language makes working on the same problems a lot easier.
+- **Fast product development** — Besides DX, there are of course other factors that help speed up your product development cycle when you have a centralised component library.
+- **Better and more consistent UX** — A good component library can help increase the quality of the user experience in your product (and even cross product). Opinionated components and patterns will allow your product developers to focus on the domain logic instead of having to spend all their time on the core building blocks.
+
+However, we never got as far as we wanted with that. Partially, because we didn't have the buy-in from the design team. And partially, because we didn't have many products yet, so the benefits of the design system were not as obvious to everyone.
+
+It also meant we didn't dedicate the necessary time or resources to it on an ongoing basis. The work on the component library was always treated as secondary, only justified whenever we found time aside from the product work and other business as usual.
+
+## A new attempt
+
+The above is to give you some context on where we started. I would not call what we had a design system in any shape or form, but I think it was a more than solid foundation. A JS ecosystem we built that made our work better and faster. I also believe that for a lot of the objectives we originally had were going in the right direction.
+
+While the first attempt never got beyond what I just described (component library, modules, styling abstraction), the whole idea got some fresh breath of air when we recently managed to create a team to look more into the topic again. A dedicated design system team. And that's where our journey starts.
+
+In the following parts of this series, we will go into more detail on the above—the objectives and how we are trying to achieve them. I hope this gives enough context on where we are coming from and a few of the lessons we learned before we even really started, based on our (largely failed) past experience.
+
+## Lessons learned (before we even started)
+
+### Lesson #1 — Building components before you actually need them is hard
+
+Not only because it might feel like a waste of time (building those components doesn't get your products closer to the MVP in the short term), but more so because requirements are very vague if at all defined.
+
+Building components without requirements is like shooting in the dark, especially when it comes to your component API design. Without requirements, you cannot ensure a good developer experience.
+
+### Lesson #2 — You need cross-discipline buy-in
+
+A great component library and JS ecosystem are useless if the designs aren't consistent or following consistent rules.
+
+The same goes the other way round: if your design team has proper conventions and patterns, it doesn't matter if the developer team has nothing to implement those with.
+
+### Lesson #3 — The benefits will pay off
+
+Even if it's sometimes hard to see the immediate benefits (particularly for stakeholders that focus on the immediate product delivery), it's worth thinking about the bigger picture and the wins in the long run.
+
+Being able to communicate those obviously helps though, which is where the “why”s come into play 😊

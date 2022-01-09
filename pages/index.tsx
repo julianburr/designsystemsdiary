@@ -1,25 +1,8 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Link from "next/link";
 import styled from "styled-components";
 
-import { BREAKPOINTS, GlobalStyles } from "src/theme";
-import { Header } from "src/components/header";
-
-import faviconPng from "src/assets/favicon.png";
-
-const Content = styled.div`
-  width: 100%;
-  padding: 0.8rem;
-  max-width: 124rem;
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-
-  ${BREAKPOINTS.TABLET} {
-    padding: 2rem;
-  }
-`;
+import { BREAKPOINTS } from "src/theme";
 
 const Banner = styled.div`
   width: 100%;
@@ -40,12 +23,6 @@ const Banner = styled.div`
       text-align: right;
     }
   }
-`;
-
-const Main = styled.main`
-  width: 100%;
-  padding: 3.2rem;
-  background: #fff;
 `;
 
 const Cards = styled.ul`
@@ -109,90 +86,75 @@ const Card = styled.li`
 const Home: NextPage = () => {
   return (
     <>
-      <GlobalStyles />
+      <Banner>
+        <h1>
+          Learning together how to build, maintain and improve design systems
+        </h1>
 
-      <Head>
-        <title>Design Systems Diary</title>
-        <meta
-          name="description"
-          content="Learning about how to build and improve design systems"
-        />
-        <link rel="icon" href={faviconPng.src} />
-      </Head>
+        <Cards>
+          <Card>
+            <Link href="/diary" passHref>
+              <a>
+                <h2>Diary</h2>
+                <p>
+                  A collection of lessons and learnings, going through the
+                  process of creating a new design system.
+                </p>
+              </a>
+            </Link>
+          </Card>
+          <Card>
+            <Link href="/tutorials" passHref>
+              <a>
+                <h2>Tutorials</h2>
+                <p>
+                  Hands on tutorials that help you build design systems and
+                  understand the concepts within them better.
+                </p>
+              </a>
+            </Link>
+          </Card>
+          <Card>
+            <Link href="/glossary" passHref>
+              <a>
+                <h2>Glossary</h2>
+                <p>
+                  Learn about termonologies, different paradigms and concepts
+                  related to building design systems.
+                </p>
+              </a>
+            </Link>
+          </Card>
+          <Card>
+            <Link href="/resources" passHref>
+              <a>
+                <h2>Resources</h2>
+                <p>
+                  A collection of useful resources to learn more about design
+                  systems and everything related to them.
+                </p>
+              </a>
+            </Link>
+          </Card>
+        </Cards>
+      </Banner>
 
-      <Content>
-        <Header />
+      <main id="main-content">
+        <section>
+          <h2>Latest diary entries</h2>
+          <p>...</p>
+        </section>
 
-        <Banner>
-          <h1>
-            Learning together how to build, maintain and improve design systems
-          </h1>
+        <section>
+          <h2>Latest tutorials</h2>
+          <p>...</p>
+        </section>
 
-          <Cards>
-            <Card>
-              <Link href="/diary" passHref>
-                <a>
-                  <h2>Diary</h2>
-                  <p>
-                    A collection of lessons and learnings, going through the
-                    process of creating a new design system.
-                  </p>
-                </a>
-              </Link>
-            </Card>
-            <Card>
-              <Link href="/tutorials" passHref>
-                <a>
-                  <h2>Tutorials</h2>
-                  <p>
-                    Hands on tutorials that help you build design systems and
-                    understand the concepts within them better.
-                  </p>
-                </a>
-              </Link>
-            </Card>
-            <Card>
-              <Link href="/glossary" passHref>
-                <a>
-                  <h2>Glossary</h2>
-                  <p>
-                    Learn about termonologies, different paradigms and concepts
-                    related to building design systems.
-                  </p>
-                </a>
-              </Link>
-            </Card>
-            <Card>
-              <Link href="/resources" passHref>
-                <a>
-                  <h2>Resources</h2>
-                  <p>
-                    A collection of useful resources to learn more about design
-                    systems and everything related to them.
-                  </p>
-                </a>
-              </Link>
-            </Card>
-          </Cards>
-        </Banner>
-
-        <Main id="main-content">
-          <section>
-            <h2>Latest diary entries</h2>
-            <p>...</p>
-          </section>
-
-          <section>
-            <h2>Latest tutorials</h2>
-            <p>...</p>
-          </section>
-
-          <section>
-            <h2>Latest resources</h2>
-            <p>...</p>
-          </section>
-        </Main>
-      </Content>
+        <section>
+          <h2>Latest resources</h2>
+          <p>...</p>
+        </section>
+      </main>
     </>
   );
 };
