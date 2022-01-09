@@ -176,7 +176,7 @@ const Home: NextPage = () => {
           </Cards>
         </Banner>
 
-        <Main>
+        <Main id="main-content">
           <section>
             <h2>Latest diary entries</h2>
             <p>...</p>
