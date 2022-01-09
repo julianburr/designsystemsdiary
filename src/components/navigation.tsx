@@ -66,7 +66,7 @@ export function Navigation({ items = [], currentPart }: NavigationProps) {
           <li key={index}>
             <Link href={item.url}>
               <a className={classnames({ active: item.part === currentPart })}>
-                <Part>{item.part.toString().padStart(2, "0")}</Part> -{" "}
+                <Part>{(item.part || 0).toString().padStart(2, "0")}</Part> -{" "}
                 {item.title}
               </a>
             </Link>
