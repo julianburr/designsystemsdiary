@@ -36,13 +36,15 @@ jobs:
           yarn typecheck
 
       - name: Create .env
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ secrets.GOOGLE_ANALYTICS_ID }}
+          envkey_MAILCHIMP_API_KEY: ${{ MAILCHIMP_API_KEY }}
+          envkey_MAILCHIMP_API_SERVER: ${{ MAILCHIMP_API_SERVER }}
+          envkey_MAILCHIMP_AUDIENCE_ID: ${{ MAILCHIMP_AUDIENCE_ID }}
+
+      - name: Test
         run: |-
-          echo "NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ secrets.GOOGLE_ANALYTICS_ID }}\
-            \
-            \n\nMAILCHIMP_API_KEY=${{ secrets.MAILCHIMP_API_KEY }}\
-            \nMAILCHIMP_API_SERVER=${{ secrets.MAILCHIMP_API_SERVER }}\
-            \nMAILCHIMP_AUDIENCE_ID=${{ secrets.MAILCHIMP_AUDIENCE_ID }}\
-            " > .env
           cat .env
 
       - name: Deploy via Vercel
