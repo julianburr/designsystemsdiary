@@ -37,12 +37,11 @@ jobs:
 
       - name: Create .env
         run: |-
-          echo "\
-            NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ secrets.GOOGLE_ANALYTICS_ID }} \
+          echo "NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ secrets.GOOGLE_ANALYTICS_ID }}\
             \
-            MAILCHIMP_API_KEY=${{ secrets.MAILCHIMP_API_KEY }} \
-            MAILCHIMP_API_SERVER=${{ secrets.MAILCHIMP_API_SERVER }} \
-            MAILCHIMP_AUDIENCE_ID=${{ secrets.MAILCHIMP_AUDIENCE_ID }} \
+            \n\nMAILCHIMP_API_KEY=${{ secrets.MAILCHIMP_API_KEY }}\
+            \nMAILCHIMP_API_SERVER=${{ secrets.MAILCHIMP_API_SERVER }}\
+            \nMAILCHIMP_AUDIENCE_ID=${{ secrets.MAILCHIMP_AUDIENCE_ID }}\
             " > .env
           cat .env
 
