@@ -4,11 +4,12 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import { ReadTimeResults } from "reading-time";
 
+import { Tooltip } from "src/components/tooltip";
+
 import TwitterSvg from "src/assets/icons/twitter.svg";
 import LinkedInSvg from "src/assets/icons/linkedin.svg";
 import LinkSvg from "src/assets/icons/link.svg";
 import HeartSvg from "src/assets/icons/heart.svg";
-import { Tooltip } from "./tooltip";
 
 const Container = styled.div`
   width: 100%;
@@ -167,6 +168,7 @@ export function PageMeta({ tags = [], readingTime, title }: PageMetaProps) {
 
         <CopyInput
           ref={copyInputRef as any}
+          tabIndex={-1}
           type="text"
           value={
             typeof window !== "undefined" ? window.location.href : undefined

@@ -1,4 +1,11 @@
-import { ReactNode, Ref, useCallback, useRef, useState } from "react";
+import {
+  ReactNode,
+  Ref,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 import { Placement } from "@popperjs/core";
 import { usePopper } from "react-popper";
@@ -53,6 +60,9 @@ type ChildrenProps = {
   elementRef: Ref<any>;
   onMouseOver: (e: any) => void;
   onMouseLeave: (e: any) => void;
+  onFocus: (e: any) => void;
+  onBlur: (e: any) => void;
+  "aria-describedy": string;
   update: UpdateFn | null;
 };
 
@@ -60,7 +70,11 @@ type TooltipProps = {
   children: (props: ChildrenProps) => JSX.Element;
   content: ReactNode;
   placement?: Placement;
+  portalTarget?: HTMLElement;
 };
+
+// Used to give tooltips a unique ID
+let uuid = 0;
 
 // Storing the current callback independent from the component instance
 // to be able to ensure that only one tooltip is ever visible at the
@@ -71,14 +85,19 @@ export function Tooltip({
   children,
   content,
   placement = "top",
+  portalTarget,
 }: TooltipProps) {
+  const [instanceUuid] = useState(++uuid);
+
+  // Component instance specific timers to deal with show and hide delays
   const showTimer = useRef<any>();
   const hideTimer = useRef<any>();
 
+  // Internal state keeping track of visibility of tooltip
   const [visible, setVisible] = useState(false);
 
+  // Initialise popper
   const [element, setElement] = useState(null);
-
   const [popper, setPopper] = useState(null);
   const [arrow, setArrow] = useState(null);
   const { styles, attributes, update } = usePopper(element, popper, {
@@ -99,11 +118,14 @@ export function Tooltip({
     ],
   });
 
-  const handleMouseOver = useCallback(() => {
+  // Show tooltip
+  const handleShow = useCallback((e) => {
     clearTimeout(hideTimer.current);
 
-    if (currentCallback) {
-      currentCallback();
+    if (e.type === "focus" || currentCallback) {
+      // On focus, or when another tooltip is currently visibly, we want
+      // to show the new tooltip immediately
+      currentCallback?.();
       setVisible(true);
     } else {
       showTimer.current = setTimeout(() => {
@@ -115,20 +137,45 @@ export function Tooltip({
     currentCallback = () => setVisible(false);
   }, []);
 
-  const handleMouseLeave = useCallback(() => {
+  // Helper to hide tooltip
+  const handleHide = useCallback((e) => {
     clearTimeout(showTimer.current);
 
-    hideTimer.current = setTimeout(() => {
+    if (e.type === "blur") {
+      // On blur we want to hide immediately
       setVisible(false);
-    }, 500);
+    } else {
+      hideTimer.current = setTimeout(() => {
+        setVisible(false);
+      }, 500);
+    }
   }, []);
+
+  // Tooltips should also close when the user presses the `esc` key
+  // so we register an event listener whenever the visible state is true
+  useEffect(() => {
+    function handleKeydown(e: any) {
+      if (e.key === "Escape") {
+        setVisible(false);
+      }
+    }
+
+    if (visible) {
+      window.document.addEventListener("keydown", handleKeydown);
+      return () =>
+        window.document.removeEventListener("keydown", handleKeydown);
+    }
+  }, [visible]);
 
   return (
     <>
       {children({
         elementRef: setElement,
-        onMouseOver: handleMouseOver,
-        onMouseLeave: handleMouseLeave,
+        onMouseOver: handleShow,
+        onMouseLeave: handleHide,
+        onFocus: handleShow,
+        onBlur: handleHide,
+        "aria-describedy": `tooltip-${instanceUuid}`,
         update,
       })}
 
@@ -136,10 +183,11 @@ export function Tooltip({
         createPortal(
           <Container
             ref={setPopper as any}
+            id={`tooltip-${instanceUuid}`}
             role="tooltip"
             style={styles.popper}
-            onMouseOver={handleMouseOver}
-            onMouseLeave={handleMouseLeave}
+            onMouseOver={handleShow}
+            onMouseLeave={handleHide}
             {...attributes.popper}
           >
             <div>{content}</div>
@@ -149,7 +197,7 @@ export function Tooltip({
               style={styles.arrow}
             />
           </Container>,
-          window.document.body
+          portalTarget || window.document.body
         )}
     </>
   );

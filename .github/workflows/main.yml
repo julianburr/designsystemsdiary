@@ -37,7 +37,13 @@ jobs:
 
       - name: Create .env
         run: |-
-          echo "NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ secrets.GOOGLE_ANALYTICS_ID }}" > .env
+          echo "\
+            NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ secrets.GOOGLE_ANALYTICS_ID }} \
+            \
+            MAILCHIMP_API_KEY=${{ secrets.MAILCHIMP_API_KEY }} \
+            MAILCHIMP_API_SERVER=${{ secrets.MAILCHIMP_API_SERVER }} \
+            MAILCHIMP_AUDIENCE_ID=${{ secrets.MAILCHIMP_AUDIENCE_ID }} \
+            " > .env
 
       - name: Deploy via Vercel
         uses: ./.github/actions/custom-actions/deploy-vercel
