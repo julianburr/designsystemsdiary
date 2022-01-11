@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -7,6 +7,8 @@ import { ReadTimeResults } from "reading-time";
 import TwitterSvg from "src/assets/icons/twitter.svg";
 import LinkedInSvg from "src/assets/icons/linkedin.svg";
 import LinkSvg from "src/assets/icons/link.svg";
+import HeartSvg from "src/assets/icons/heart.svg";
+import { Tooltip } from "./tooltip";
 
 const Container = styled.div`
   width: 100%;
@@ -36,23 +38,39 @@ const WrapButtons = styled.div`
   }
 `;
 
-const Button = styled(({ as: As = "button", ...props }) => <As {...props} />)`
+const Button = styled(({ as: As, ...props }) => <As {...props} />)`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 3.2rem;
   height: 3.2rem;
-  background: #222;
-  color: #fff;
+  background: #ccc;
+  color: #222;
   cursor: pointer;
   border: 0 none;
   padding: 0;
   outline-offset: 0;
+  transition: background 0.2s, color 0.2s;
 
-  &:hover {
-    background: ${(props) => props.color ?? "#444"};
+  &:hover,
+  &.active {
+    color: #fff;
+    background: ${(props) => props.color ?? "#222"};
   }
 `;
+
+const Spacer = styled.div`
+  width: 0.4rem;
+  height: 0.1rem;
+`;
+
+const CopyInput = styled.input`
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+`;
+
+type UpdateFn = () => any;
 
 type PageMetaProps = {
   title: string;
@@ -60,8 +78,12 @@ type PageMetaProps = {
   tags?: string[];
 };
 
+let copyTimer: any = null;
+
 export function PageMeta({ tags = [], readingTime, title }: PageMetaProps) {
   const router = useRouter();
+
+  const copyInputRef = useRef();
 
   const time = Math.ceil(readingTime?.minutes || 1);
   const timeText = `${time} ${time === 1 ? "minute" : "minutes"} read`;
@@ -70,6 +92,23 @@ export function PageMeta({ tags = [], readingTime, title }: PageMetaProps) {
 
   const url = `https://www.designsystemsdiary.com` + router.asPath;
   const shareUrl = encodeURIComponent(url);
+
+  const [copied, setCopied] = useState(false);
+  const handleCopy = useCallback((updateTooltipPosition: UpdateFn | null) => {
+    clearTimeout(copyTimer);
+    setCopied(true);
+    updateTooltipPosition?.();
+
+    const copyText: any = copyInputRef.current;
+    console.log({ copyText });
+    copyText.select();
+    document.execCommand("copy");
+
+    copyTimer = setTimeout(() => {
+      setCopied(false);
+      updateTooltipPosition?.();
+    }, 3000);
+  }, []);
 
   return (
     <Container>
@@ -85,33 +124,82 @@ export function PageMeta({ tags = [], readingTime, title }: PageMetaProps) {
         ))}
       </div>
       <WrapButtons>
-        <Button
-          as="a"
-          href={
-            `https://twitter.com/intent/tweet` +
-            `?text=${shareText}` +
-            `&url=${shareUrl}`
+        <Tooltip content="Share on Twitter">
+          {({ elementRef, ...props }) => (
+            <Button
+              {...props}
+              ref={elementRef}
+              as="a"
+              color="#1d9bf1"
+              href={
+                `https://twitter.com/intent/tweet` +
+                `?text=${shareText}` +
+                `&url=${shareUrl}`
+              }
+              target="_blank"
+              rel="noopen nofollow"
+            >
+              <TwitterSvg />
+            </Button>
+          )}
+        </Tooltip>
+        <Tooltip content="Share on LinkedIn">
+          {({ elementRef, ...props }) => (
+            <Button
+              {...props}
+              ref={elementRef}
+              as="a"
+              color="#0b66c2"
+              href={
+                `https://www.linkedin.com/shareArticle` +
+                `?url=${shareUrl}` +
+                `&title=${shareText}`
+              }
+              target="_blank"
+              rel="noopen nofollow"
+            >
+              <LinkedInSvg />
+            </Button>
+          )}
+        </Tooltip>
+
+        <Spacer />
+
+        <CopyInput
+          ref={copyInputRef as any}
+          type="text"
+          value={
+            typeof window !== "undefined" ? window.location.href : undefined
           }
-          target="_blank"
-          rel="noopen nofollow"
-        >
-          <TwitterSvg />
-        </Button>
-        <Button
-          as="a"
-          href={
-            `https://www.linkedin.com/shareArticle` +
-            `?url=${shareUrl}` +
-            `&title=${shareText}`
-          }
-          target="_blank"
-          rel="noopen nofollow"
-        >
-          <LinkedInSvg />
-        </Button>
-        <Button>
-          <LinkSvg />
-        </Button>
+        />
+        <Tooltip content={copied ? "Copied to clipboard" : "Copy link"}>
+          {({ elementRef, update, ...props }) => (
+            <Button
+              {...props}
+              onClick={() => handleCopy(update)}
+              ref={elementRef}
+              as="button"
+            >
+              <LinkSvg />
+            </Button>
+          )}
+        </Tooltip>
+
+        <Spacer />
+
+        <Tooltip content="Add to favorites">
+          {({ elementRef, ...props }) => (
+            <Button
+              {...props}
+              onClick={() => alert("Favorites not implemented yet!")}
+              ref={elementRef}
+              as="button"
+              color="#c87462"
+            >
+              <HeartSvg />
+            </Button>
+          )}
+        </Tooltip>
       </WrapButtons>
     </Container>
   );

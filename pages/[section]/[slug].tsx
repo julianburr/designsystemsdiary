@@ -1,11 +1,10 @@
-import { useLayoutEffect, useRef } from "react";
 import matter from "gray-matter";
-import twemoji from "twemoji";
 import styled from "styled-components";
 import { ReadTimeResults } from "reading-time";
 import * as path from "path";
 import * as fs from "fs";
 
+import { BREAKPOINTS } from "src/theme";
 import { parseMdx } from "src/utils/mdx";
 import { PageNavigation } from "src/components/page-navigation";
 import { PageMeta } from "src/components/page-meta";
@@ -20,6 +19,15 @@ const WrapContent = styled.div`
 
 const Content = styled.div`
   width: 100%;
+
+  h1 {
+    line-height: 1.1;
+    font-size: 4.8rem;
+
+    ${BREAKPOINTS.TABLET} {
+      font-size: 6.2rem;
+    }
+  }
 `;
 
 const Subtitle = styled.p`
@@ -57,20 +65,12 @@ type ContentProps = {
 };
 
 export default function Page({ params, navItems, meta, source }: ContentProps) {
-  const contentRef = useRef();
-  useLayoutEffect(() => {
-    twemoji.parse(contentRef.current as any, {
-      ext: ".svg",
-      size: "svg",
-    });
-  }, []);
-
   if (meta.draft) {
     return (
       <main id="main-content">
         <WrapContent>
           <PageNavigation items={navItems} currentPart={meta.part} />
-          <Content ref={contentRef as any}>
+          <Content>
             <h1>{meta.title}</h1>
             {meta.subtitle && (
               <Subtitle role="doc-subtitle">{meta.subtitle}</Subtitle>
@@ -90,7 +90,7 @@ export default function Page({ params, navItems, meta, source }: ContentProps) {
     <main id="main-content">
       <WrapContent>
         <PageNavigation items={navItems} currentPart={meta.part} />
-        <Content ref={contentRef as any}>
+        <Content>
           <h1>{meta.title}</h1>
           {meta.subtitle && (
             <Subtitle role="doc-subtitle">{meta.subtitle}</Subtitle>
