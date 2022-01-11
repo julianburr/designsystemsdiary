@@ -1,10 +1,10 @@
+import { ComponentProps, useLayoutEffect, useRef } from "react";
 import styled from "styled-components";
 import { MDXRemote } from "next-mdx-remote";
+import twemoji from "twemoji";
 
-import { BREAKPOINTS } from "src/theme";
 import { Image } from "src/components/mdx/image";
 import { Hr } from "src/components/mdx/hr";
-import { ComponentProps } from "react";
 
 const Container = styled.div`
   width: 100%;
@@ -14,14 +14,6 @@ const Container = styled.div`
   h3,
   h4 {
     line-height: 1.1;
-  }
-
-  h1 {
-    font-size: 4.8rem;
-
-    ${BREAKPOINTS.TABLET} {
-      font-size: 6.2rem;
-    }
   }
 
   h2 {
@@ -66,8 +58,16 @@ const components = {
 };
 
 export function Markdown(props: ComponentProps<typeof MDXRemote>) {
+  const contentRef = useRef();
+  useLayoutEffect(() => {
+    twemoji.parse(contentRef.current as any, {
+      ext: ".svg",
+      size: "svg",
+    });
+  }, []);
+
   return (
-    <Container>
+    <Container ref={contentRef as any}>
       <MDXRemote {...props} components={components} />
     </Container>
   );
