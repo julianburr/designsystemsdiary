@@ -11,6 +11,10 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  *:focus {
+    outline: .2rem solid rgba(0,0,0,.4);
+  }
+
   html {
     font-size: 62.5%;
   }
@@ -18,7 +22,7 @@ export const GlobalStyles = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     line-height: 1.4;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-weight: 400;
@@ -32,11 +36,37 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
   }
 
+  h1 {
+    font-size: 3.2em;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  h3 {
+    font-size: 1.4em
+  }
+
+  h4 {
+    font-size: 1em;
+  }
+
   button {
     cursor: pointer;
   }
 
   input, textarea, button, select {
     font: inherit;
+  }
+
+  a {
+    color: #c87462;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  a:hover {
+    text-decoration: underline;
   }
 `;

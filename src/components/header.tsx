@@ -115,6 +115,13 @@ const Container = styled.header<{ active: boolean }>`
   }
 `;
 
+const Logo = styled.div`
+  & a {
+    text-decoration: none;
+    color: inherit;
+  }
+`;
+
 const SkipLink = styled.a`
   display: flex;
   font-family: Staatliches;
@@ -143,7 +150,13 @@ export function Header() {
 
   return (
     <Container active={active}>
-      <h1>Design Systems Diary</h1>
+      <Logo>
+        <Link href="/">
+          <a>
+            <h1>Design Systems Diary</h1>
+          </a>
+        </Link>
+      </Logo>
 
       <SkipLink href="#main-content">Skip navigation</SkipLink>
 

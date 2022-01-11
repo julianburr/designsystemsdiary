@@ -1,0 +1,124 @@
+---
+part: 2
+title: Starting With The Basics
+subtitle: The beauty of atomic design (and why we don't just use it as is)
+tags: Introduction
+---
+
+I'll likely never forget the first official meeting we had as the newly formed design system team. It was four of us, two designers and two developers (including me). The goal of the meeting was to define the different parts of the design system and give them names that both designers and developers would understand.
+
+“So we have 'components', like buttons, inputs, etc. What do you call these in the dev team?” The design lead on the team was driving the discussion.
+
+“Components. I guess?”
+
+“Cool! Then we have more complex objects. Like list views. What would you call those?”
+
+“Ahem … components?” — on the development side of things we were coming into this with an already built component library. We never spent much time debating about terminology within it, because all it contained for us was components of different complexity.
+
+Blank stare from the designers. “And say you'd want to describe full page layouts? Like the composition of navigations and objects. What would you call that?”
+
+“Layout components?”
+
+What everyone learned that day was the importance to think about what your design system is made of. For developers, it's easy to think of it as just a collection of components and a handful of theme variables. But if you break it down and try to group the different elements, you'll end up with a clear structure. This basis will look slightly different depending on your use cases and requirements.
+
+![Early sketches trying to figure out what the design system consists of and how to organise these different pieces of information](./src/assets/images/diary-02-early-sketches.jpeg)
+
+---
+
+## The "how"
+
+In the first part of this series, we explored some of the reasons “why” you'd want to build a design system. Identifying these motivations is key to your success. If you have no clear objective, you're unlikely to get clear or good outcomes.
+
+But once you understand the “why”, the next question to ask yourself is “how”. Which opens the general question of the structure a design system needs to have to support those objectives.
+
+It is crucial that you have a clear idea about how you want to go about building your design system. What should it contain? How will these things be organised? How will the individual bits and pieces eventually help you to build holistic applications faster and easier?
+
+This is important for multiple reasons. For one, like with any other project, you want to have a rough plan of what you're going to do before you dive into it. But secondly, you want to make sure that everyone is on the same page, especially when it comes to language. What are the individual parts of your design system called? What is their purpose? Why should everyone care about them? There are a million different ways to approach design systems. You want your team to be pulling on the same strings.
+
+## Atoms, Molecules and Organisms
+
+So how did we approach our design system? A lot of it was inspired by Brad Frosts “Atomic Design”, a book I think everyone thinking about building or even just having to deal with design systems should read at least once (or at least watch his talk 😉). Not because it represents the ultimate truth (I don't think such a silver bullet exists in our industry for pretty much anything, let alone such a complex matter as design systems), but because he does a great job in explaining the motivation behind his approach and the different layers of abstraction. The principles he describes are also nothing new, just put into a context easy for everyone to understand.
+
+The gist of it is simple: UIs consist of a lot of building blocks. You start with very basic ones, “atoms” that cannot be broken down any further, and then you build more and more complex levels of components from these. Each of these levels has a specific purpose. Therefore, you should build them with specific ideas and requirements in mind.
+
+![https://bradfrost.com/blog/post/atomic-web-design/ — visualisation of the five distinct levels in atomic design](./src/assets/images/diary-02-atomic-design.png)
+
+### 1. Atoms
+
+The lowest level of abstraction. “Atoms” are the smallest building blocks. You cannot break them up further. These kinds of components are your fundamental building blocks. They need to be very flexible.
+
+E.g. think of a button. There's a lot of ways a button can be used. Just with text, with an icon and text, only with an icon. With a solid background colour or instead with an outline. The list goes on and on. So your core button component needs to be versatile.
+
+Another example of an “atom” could be a text input component. Again, there are different ways you'd want to use this component, so it needs to provide a range of properties to support those use cases.
+
+On an unrelated side note: we built our design system in React, so apologies in advance that I'll like drift more and more into their terminology as this series goes on 😅
+
+It's worth noting that “atoms” can include more than just components. The methodology can also encapsulate other foundational artifacts of your design system like colours, typography, etc.
+
+### 2. Molecules
+
+Combine multiple “atoms”, and they will form “molecules”. Ideally, this group of components is built for a specific job and is doing that job well.
+
+E.g. taking the text input and button mentioned above, we can create a search input. The idea is that we take those flexible core components and compose them to something reusable with a specific purpose. This reverses how you think about these components' properties. While “atoms” are likely to have a lot of properties to cover all use cases, “molecules” should have as few of them as possible. Again: they are supposed to do one job, and do it well.
+
+### 3. Organisms
+
+This level describes a group of “molecules” that together build a bigger structure, you could call it a feature if you like. “Organisms” could still be reusable within the same application, but their primary purpose is to combine reusable components to provide the big structures of functionality in your applications.
+
+Examples would be a page header (composed e.g. from a logo, a menu and the search input from before). Another (more reusable) example could be a comment section.
+
+Organisms are, and I'm going a bit beyond Brad Frost's book and into personal interpretation here, the bridge between reusable components and business logic. It doesn't mean that they need to contain business logic. But if you provide them in your design system, your application will feed the business logic through properties to these components.
+
+### 4. + 5. Templates and pages
+
+This is where we most definitely hit the application or rather brand specific level of abstraction. As the name suggests, “templates” are your boilerplates for different kinds of contents, ranging from individual sections to whole web pages. “Pages” are essential templates with actual content fed into them.
+
+For a developer, these are likely the more boring bits. But in actuality, this is where design systems shine. The best set of components (“atoms”, “molecules” and “organisms” alike) is useless if you can't do anything with them. The templates and pages are what your end-user will see. And having a well-structured design system will allow you to experiment heavily on this level with very little effort to find the best possible experience for your users.
+
+## How we structure our design system
+
+This split into different levels of abstraction makes a lot of sense. And as I said before, the core idea is nothing new. Earlier concepts have tried to describe the same thing, take e.g. [BEM](https://en.bem.info/methodology/) (the popular CSS class naming convention). Its whole idea revolves around the same thing, defining element groups and even bigger groups formed of element groups to target particular “component” styles. And the goal is also the same: break your UI up into small, reusable chunks.
+
+But as implied in the subtitle, we do not strictly follow the above definition of the “atomic design” levels in our design system. At least not in our initial approach. There are a few reasons for this.
+
+The biggest reason for us is that we still don't 100% know where we are going with our design system. We know we are building it to support multiple products with different brands, so one of the big questions for us is where exactly we want to draw the line between the design system and the products. Right now, in our minds we think we'll end up with some form of inheritance, where the core design system just serves as the foundation of a design system for each product, that can easily add that layer of personality and brand identity to it. How exactly we will achieve this is unclear at this stage. The fact that we're not sure if “atomic design” will fully cover our needs, we decided again using its terminology. If we diverge from the original meanings of the different levels (or god forbid even add our own levels) in the future, new people who are familiar with Brad Frost's work will be unnecessarily confused.
+
+We also found that people unfamiliar with Brad Frost's work didn't find the terminology all that intuitive. So instead of “atoms”, “molecules” and “organisms” we called the different levels “core components”, “patterns” and “features”.
+
+### A missing piece
+
+Another big reason for our decision against just using the “atomic design” terminology is that it is missing something that we want to emphasise more — variants.
+
+Variants are essentially core components that serve one specific purpose. Essentially how we described “molecules” in the section above, just on an “atom” level still.
+
+E.g. if we look at the button, it can have different levels of usage in the UI. To make the component more intuitive to use, we create semantic variants, i.e. “primary button”, “secondary button”, etc. Same thing with the text input. Instead of developers always having to remember how to optimise an input for email or phone number inputs, we provide variants for “email input” and “phone input” (in these examples, you might want to apply a pattern property to ensure optimal accessibility on mobile devices, maybe you want to use icons to indicate the type of input to the user, etc.)
+
+In a nutshell, variants are a way for us to provide a set of sensible default properties to some of our core components to make them easier to use for specific use cases. This will allow us to optimise the use cases on the design system level and have all apps automatically benefit from them without any extra work needed.
+
+I'm sure we could have found a way to cater for variants using the “atomic design” terminology, but again, if you do that you're running a high risk of confusing people that have read the book and know the methodology and are not aware that you duct-taped some custom concepts onto it.
+
+![The initial model for our design system structure](./src/assets/images/diary-02-our-system-structure.png)
+
+## Lessons learned
+
+### Lesson #4 — Using the same language is way more important then it might seem in the beginning
+
+Dealing with two disciplines that have wildly different perspectives and objectives to start with, to align them, you need to speak the same language. You can't define aligned objectives (which you definitely want to do to make sure you're pulling on the same strings) if you don't share terminology.
+
+### Lesson #5 — The lines between different abstraction levels can be blurry
+
+Especially when it comes to “patterns” vs. “variants of core components” — is a “primary button” a “molecule” or an “atom”? This is important to define for you as a team, though. As I tried to point out earlier, all levels serve a different purpose, so the team not being on the same page about what these levels are and why they are important is just asking for disaster.
+
+### Lesson #6 — Start small
+
+As tempting as it is to build everything at once, start small. If you don't get the core right, the issues will get exponentially bigger at scale when you start building patterns and whole features.
+
+You're also more likely to have well-defined requirements on the core level when you start. As mentioned in the first part, good requirements are key. If you don't have those, make sure you work them out first, before you start building anything.
+
+That being said, it always pays off to start thinking and brainstorming about the bigger picture, including patterns and features, while you're working on the core components.
+
+### Lesson #7 — Don't forget who you are building for
+
+Yes, you're trying to create a generic solution, but in the end, the DS needs to be usable for all your product developers and designers.
+
+Take the time to gather early feedback and input from the other teams while you're building out the foundations, the same as above here: small mistakes here will get very visible at scale. Spending the extra time to get things right will pay off, and if you find mistakes when scaling up, it's always worth going back to this stage to fix them up properly.
