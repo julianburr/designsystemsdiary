@@ -3,7 +3,7 @@ name: Deploy Production
 on:
   push:
     branches:
-      - main
+      - ci/fix-env-setup
 
 jobs:
   deploy_production:
@@ -44,6 +44,7 @@ jobs:
             MAILCHIMP_API_SERVER=${{ secrets.MAILCHIMP_API_SERVER }} \
             MAILCHIMP_AUDIENCE_ID=${{ secrets.MAILCHIMP_AUDIENCE_ID }} \
             " > .env
+          cat .env
 
       - name: Deploy via Vercel
         uses: ./.github/actions/custom-actions/deploy-vercel
