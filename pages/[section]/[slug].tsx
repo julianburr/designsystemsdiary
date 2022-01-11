@@ -1,37 +1,44 @@
-import * as path from "path";
-import * as fs from "fs";
+import { useLayoutEffect, useRef } from "react";
 import matter from "gray-matter";
 import twemoji from "twemoji";
 import styled from "styled-components";
+import { ReadTimeResults } from "reading-time";
+import * as path from "path";
+import * as fs from "fs";
 
-import { remark } from "remark";
-import parse from "remark-parse";
-import smartypants from "remark-smartypants";
-import rehype from "remark-rehype";
-import externalLinks from "rehype-external-links";
-import html from "rehype-stringify";
-
-import { Navigation } from "src/components/navigation";
+import { parseMdx } from "src/utils/mdx";
+import { PageNavigation } from "src/components/page-navigation";
+import { PageMeta } from "src/components/page-meta";
+import { NewsletterForm } from "src/components/newsletter-form";
+import { Hr } from "src/components/mdx/hr";
+import { Markdown } from "src/components/markdown";
 
 const WrapContent = styled.div`
   display: flex;
   flex-direction: row-reverse;
-  margin-left: 3.2rem;
 `;
 
 const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  width: 100%;
 `;
 
-type Data = {
+const Subtitle = styled.p`
+  margin-top: 0.8rem;
+  font-size: 2rem;
+  color: #888;
+  font-family: Staatliches;
+`;
+
+type MetaData = {
+  readingTime?: ReadTimeResults;
   part?: number;
   title: string;
+  subtitle?: string;
   tags?: string;
+  draft?: boolean;
 };
 
-type NavItem = { url: string } & Data;
+type NavItem = { url: string } & MetaData;
 
 type Params = {
   section: string;
@@ -44,25 +51,60 @@ type Path = {
 
 type ContentProps = {
   params: Params;
-  data: Data;
-  content: string;
-  htmlContent: string;
   navItems?: NavItem[];
+  meta: MetaData;
+  source: any;
 };
 
-export default function Page({
-  params,
-  data,
-  htmlContent,
-  navItems,
-}: ContentProps) {
+export default function Page({ params, navItems, meta, source }: ContentProps) {
+  const contentRef = useRef();
+  useLayoutEffect(() => {
+    twemoji.parse(contentRef.current as any, {
+      ext: ".svg",
+      size: "svg",
+    });
+  }, []);
+
+  if (meta.draft) {
+    return (
+      <main id="main-content">
+        <WrapContent>
+          <PageNavigation items={navItems} currentPart={meta.part} />
+          <Content ref={contentRef as any}>
+            <h1>{meta.title}</h1>
+            {meta.subtitle && (
+              <Subtitle role="doc-subtitle">{meta.subtitle}</Subtitle>
+            )}
+            <Hr />
+            <NewsletterForm
+              align="center"
+              title="This article has not been finished yet. Do you want to get notified when it is?"
+            />
+          </Content>
+        </WrapContent>
+      </main>
+    );
+  }
+
   return (
     <main id="main-content">
       <WrapContent>
-        <Navigation items={navItems} currentPart={data.part} />
-        <Content>
-          <h1>{data?.title}</h1>
-          <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <PageNavigation items={navItems} currentPart={meta.part} />
+        <Content ref={contentRef as any}>
+          <h1>{meta.title}</h1>
+          {meta.subtitle && (
+            <Subtitle role="doc-subtitle">{meta.subtitle}</Subtitle>
+          )}
+          <PageMeta
+            title={meta.title}
+            tags={meta.tags?.split(",")?.map?.((str) => str.trim())}
+            readingTime={meta.readingTime}
+          />
+
+          <Markdown {...source} />
+
+          <Hr />
+          <NewsletterForm align="center" />
         </Content>
       </WrapContent>
     </main>
@@ -74,54 +116,37 @@ export async function getStaticProps({
 }: {
   params: Params;
 }): Promise<{ props: ContentProps }> {
+  const filePath = `./content/${params.section}/${params.slug}.mdx`;
   const fileContent = fs.readFileSync(
-    path.resolve(
-      process.cwd(),
-      `./content/${params.section}/${params.slug}.mdx`
-    ),
+    path.resolve(process.cwd(), filePath),
     "utf-8"
   );
 
-  const { data, content } = matter(fileContent);
-  const result = await remark()
-    .use(smartypants)
-    .use(parse)
-    .use(rehype)
-    .use(externalLinks, {
-      target: "_blank",
-      rel: ["nofollow", "noreferrer"],
-    })
-    .use(html)
-    .process(content);
+  const { meta, source } = await parseMdx(fileContent);
 
-  const htmlContent = twemoji.parse(result.toString(), {
-    ext: ".svg",
-    size: "svg",
-  });
+  const sectionPath = `./content/${params.section}`;
+  const slugs = fs.readdirSync(path.resolve(process.cwd(), sectionPath));
 
-  const slugs = fs.readdirSync(
-    path.resolve(process.cwd(), `./content/${params.section}`)
-  );
   const navItems = slugs.map((slug) => {
+    const slugPath = `./content/${params.section}/${slug}`;
     const fileContent = fs.readFileSync(
-      path.resolve(process.cwd(), `./content/${params.section}/${slug}`),
+      path.resolve(process.cwd(), slugPath),
       "utf-8"
     );
 
     const { data } = matter(fileContent);
     return {
       url: `/${params.section}/${slug.replace(/\.mdx$/, "")}`,
-      ...(data as Data),
+      ...(data as MetaData),
     };
   });
 
   return {
     props: {
       params,
-      data: data as Data,
-      content,
-      htmlContent,
       navItems,
+      meta: meta as MetaData,
+      source,
     },
   };
 }

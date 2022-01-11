@@ -9,6 +9,7 @@ import { Header } from "src/components/header";
 
 import faviconPng from "src/assets/favicon.png";
 import "src/assets/fonts/staatliches.css";
+import { Footer } from "src/components/footer";
 
 const Content = styled.div`
   width: 100%;
@@ -24,7 +25,7 @@ const Content = styled.div`
 
   main {
     width: 100%;
-    padding: 3.2rem;
+    padding: 3.2rem 3.2rem 6rem;
     background: #fff;
     position: relative;
 
@@ -75,6 +76,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Content>
         <Header />
         <Component {...pageProps} />
+        <Footer />
       </Content>
     </>
   );

@@ -1,18 +1,25 @@
 import Link from "next/link";
 import styled from "styled-components";
 import classnames from "classnames";
+import { BREAKPOINTS } from "src/theme";
 
 const Menu = styled.menu`
-  display: flex;
-  flex-direction: column;
-  align-self: start;
-  justify-self: start;
-  flex-shrink: 0;
-  position: sticky;
-  top: 3.2rem;
-  margin: 0 0 0 4rem;
-  padding: 0;
-  width: 25rem;
+  display: none;
+
+  ${BREAKPOINTS.TABLET} {
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+    justify-self: start;
+    flex-shrink: 0;
+    margin: 0 0 0 4rem;
+    padding: 0;
+    width: 22rem;
+  }
+
+  ${BREAKPOINTS.DESKTOP} {
+    width: 28rem;
+  }
 
   ul {
     margin: 0;
@@ -31,6 +38,7 @@ const Menu = styled.menu`
         text-decoration: none;
         transition: opacity 0.2s;
         line-height: 1.2;
+        font-weight: 400;
 
         &:hover,
         &.active {
@@ -53,12 +61,17 @@ type Item = {
   title: string;
 };
 
+type TOC = {
+  id: string;
+  title: string;
+};
+
 type NavigationProps = {
   items?: Item[];
   currentPart?: number;
 };
 
-export function Navigation({ items = [], currentPart }: NavigationProps) {
+export function PageNavigation({ items = [], currentPart }: NavigationProps) {
   return (
     <Menu>
       <ul>
@@ -66,7 +79,7 @@ export function Navigation({ items = [], currentPart }: NavigationProps) {
           <li key={index}>
             <Link href={item.url}>
               <a className={classnames({ active: item.part === currentPart })}>
-                <Part>{(item.part || 0).toString().padStart(2, "0")}</Part> -{" "}
+                <Part>{(item.part || 0).toString().padStart(2, "0")}</Part> —{" "}
                 {item.title}
               </a>
             </Link>
