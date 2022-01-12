@@ -126,11 +126,16 @@ export function Tooltip({
     ],
   });
 
-  // Show tooltip
   const handleShow = useCallback((e) => {
     clearTimeout(hideTimer.current);
+    clearTimeout(showTimer.current);
 
-    if (e.type === "focus" || currentCallback) {
+    // A bit hacky, but seemed like the easiest way rn to check whether
+    // or not another tooltip is currently visible
+    const otherTooltipVisible =
+      !visible && window.document.body.querySelector("[role=tooltip]");
+
+    if (e.type === "focus" || otherTooltipVisible) {
       // On focus, or when another tooltip is currently visibly, we want
       // to show the new tooltip immediately
       currentCallback?.();
@@ -145,9 +150,9 @@ export function Tooltip({
     currentCallback = () => setVisible(false);
   }, []);
 
-  // Helper to hide tooltip
   const handleHide = useCallback((e) => {
     clearTimeout(showTimer.current);
+    clearTimeout(hideTimer.current);
 
     if (e.type === "blur") {
       // On blur we want to hide immediately
