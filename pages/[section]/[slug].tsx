@@ -11,6 +11,7 @@ import { PageMeta } from "src/components/page-meta";
 import { NewsletterForm } from "src/components/newsletter-form";
 import { Hr } from "src/components/mdx/hr";
 import { Markdown } from "src/components/markdown";
+import { SkeletonText } from "src/components/skeleton/text";
 
 const WrapContent = styled.div`
   display: flex;
@@ -35,16 +36,6 @@ const Subtitle = styled.p`
   font-size: 2rem;
   color: #888;
   font-family: Staatliches;
-`;
-
-const Placeholder = styled.p`
-  margin: 3.2rem 0 0;
-
-  span {
-    color: #f4f4f4;
-    background: #f4f4f4;
-    line-height: 1.4;
-  }
 `;
 
 type MetaData = {
@@ -85,18 +76,8 @@ export default function Page({ params, navItems, meta, source }: ContentProps) {
             {meta.subtitle && (
               <Subtitle role="doc-subtitle">{meta.subtitle}</Subtitle>
             )}
-            <Placeholder role="presentation">
-              <span>
-                Bacon ipsum dolor amet meatloaf cupim pig, rump tongue
-                prosciutto jerky filet mignon spare ribs turducken pancetta
-                landjaeger fatback. Shank shoulder fatback, rump jowl bacon
-                turkey shankle filet mignon chislic. Filet mignon chuck swine
-                meatball corned beef flank ham beef ground round t-bone
-                frankfurter andouille salami pork belly rump. Cupim tail rump,
-                swine boudin doner picanha pancetta short ribs salami jerky
-                alcatra ham chicken tenderloin.
-              </span>
-            </Placeholder>
+            <SkeletonText />
+
             <Hr />
             <NewsletterForm
               align="center"
