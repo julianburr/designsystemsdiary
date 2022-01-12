@@ -43,12 +43,19 @@ export function Footer() {
       </p>
       <p>
         If you like what you read, or you share our interests, please share this
-        website and let us know what you would like to see next, so we can
-        continue build up useful content.
+        website and{" "}
+        <a href="mailto:designsystemsdiary@julianburr.de">let us know</a> what
+        you would like to see next, so we can continue build up useful content.
       </p>
       <p>
-        &copy; Copyright {new Date().getFullYear()} — Design Systems Diary by
-        Julian Burr
+        &copy; Copyright {new Date().getFullYear()} — Design Systems Diary by{" "}
+        <a
+          href="https://twitter.com/jburr90"
+          target="_blank"
+          rel="noreferrer nofollow"
+        >
+          Julian Burr
+        </a>
       </p>
     </Container>
   );

@@ -26,28 +26,25 @@ const Banner = styled.div`
 `;
 
 const Cards = styled.ul`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: -1.2rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.8rem;
+  margin: 0;
   padding: 0;
 
+  ${BREAKPOINTS.TABLET} {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  ${BREAKPOINTS.DESKTOP} {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
   li {
-    width: 100%;
-    padding: 1.2rem;
+    padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
     list-style: none;
-
-    ${BREAKPOINTS.TABLET} {
-      width: 50%;
-    }
-
-    ${BREAKPOINTS.DESKTOP} {
-      width: 25%;
-    }
+    width: 100%;
   }
 `;
 
@@ -55,7 +52,10 @@ const Card = styled.li`
   width: 100%;
 
   a {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
     background: #c87462;
     padding: 1.8rem;
     font-size: 1.4rem;
@@ -65,9 +65,13 @@ const Card = styled.li`
     transition: transform 0.15s;
     font-weight: 400;
 
+    h2 {
+      margin: 0 0 -0.6rem;
+    }
+
     &:hover,
     &:focus-within {
-      transform: scale(1.05);
+      text-decoration: none;
 
       h2 {
         text-decoration: underline;
