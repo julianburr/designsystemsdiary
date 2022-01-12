@@ -48,7 +48,7 @@ export function Footer() {
         you would like to see next, so we can continue build up useful content.
       </p>
       <p>
-        &copy; Copyright {new Date().getFullYear()} — Design Systems Diary by
+        &copy; Copyright {new Date().getFullYear()} — Design Systems Diary by{" "}
         <a
           href="https://twitter.com/jburr90"
           target="_blank"
