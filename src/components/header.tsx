@@ -111,6 +111,7 @@ const Container = styled.header<{ active: boolean }>`
           & svg {
             height: 3.2rem;
             width: auto;
+            margin: -0.3rem 0 0;
           }
         }
       }
