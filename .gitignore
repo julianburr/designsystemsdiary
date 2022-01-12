@@ -26,6 +26,10 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
+# Public folder
+# Remark copies images from the src folder into public as part of the build
+public
+
 # Dependency directories
 node_modules
 jspm_packages
