@@ -170,7 +170,7 @@ export default async function handler(
         };
       }),
     });
-  } catch (e) {
+  } catch (e: any) {
     res.status(500).json({ message: e.message });
   }
 }

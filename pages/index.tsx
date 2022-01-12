@@ -98,8 +98,8 @@ const Home: NextPage = () => {
               <a>
                 <h2>Diary</h2>
                 <p>
-                  A collection of lessons and learnings, going through the
-                  process of creating a new design system.
+                  A collection of personal lessons and learnings, going through
+                  the process of creating a new design system.
                 </p>
               </a>
             </Link>
