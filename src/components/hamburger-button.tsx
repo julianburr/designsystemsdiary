@@ -1,4 +1,3 @@
-import { HTMLProps, PropsWithChildren } from "react";
 import styled from "styled-components";
 
 const Button = styled.button`
@@ -43,6 +42,7 @@ const Button = styled.button`
     }
   }
 
+  &:focus span,
   &:hover span {
      {
       &:before,

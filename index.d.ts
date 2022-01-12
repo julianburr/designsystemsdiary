@@ -6,3 +6,11 @@ declare module "*.svg" {
 declare module "remark-copy-linked-files" {
   export default any;
 }
+
+declare module "remark-mdx" {
+  export default any;
+}
+
+declare module "remark-mdx-to-plain-text" {
+  export default any;
+}

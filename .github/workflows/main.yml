@@ -38,6 +38,8 @@ jobs:
       - name: Create .env
         uses: SpicyPizza/create-envfile@v1
         with:
+          envkey_RELEASE_HASH: ${{ github.sha }}
+          envkey_NEXT_PUBLIC_RELEASE_HASH: ${{ github.sha }}
           envkey_NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ secrets.GOOGLE_ANALYTICS_ID }}
           envkey_MAILCHIMP_API_KEY: ${{ secrets.MAILCHIMP_API_KEY }}
           envkey_MAILCHIMP_API_SERVER: ${{ secrets.MAILCHIMP_API_SERVER }}

@@ -1,4 +1,4 @@
-import { ComponentProps, useLayoutEffect, useRef } from "react";
+import { ComponentProps, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { MDXRemote } from "next-mdx-remote";
 import twemoji from "twemoji";
@@ -59,7 +59,7 @@ const components = {
 
 export function Markdown(props: ComponentProps<typeof MDXRemote>) {
   const contentRef = useRef();
-  useLayoutEffect(() => {
+  useEffect(() => {
     twemoji.parse(contentRef.current as any, {
       ext: ".svg",
       size: "svg",
