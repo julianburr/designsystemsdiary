@@ -63,6 +63,7 @@ const Card = styled.li`
     text-decoration: none;
     color: inherit;
     transition: transform 0.15s;
+    font-weight: 400;
 
     &:hover,
     &:focus-within {

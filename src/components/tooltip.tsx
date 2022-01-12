@@ -18,6 +18,14 @@ const Container = styled.div`
   font-size: 1.2rem;
   position: relative;
   filter: drop-shadow(0 0 1rem rgba(0, 0, 0, 0.25));
+
+  & svg {
+    display: inline-block;
+    height: 1em;
+    width: auto;
+    vertical-align: middle;
+    margin-top: -0.1rem;
+  }
 `;
 
 const Arrow = styled.div`
@@ -62,7 +70,7 @@ type ChildrenProps = {
   onMouseLeave: (e: any) => void;
   onFocus: (e: any) => void;
   onBlur: (e: any) => void;
-  "aria-describedy": string;
+  "aria-describedby": string;
   update: UpdateFn | null;
 };
 
@@ -175,7 +183,7 @@ export function Tooltip({
         onMouseLeave: handleHide,
         onFocus: handleShow,
         onBlur: handleHide,
-        "aria-describedy": `tooltip-${instanceUuid}`,
+        "aria-describedby": `tooltip-${instanceUuid}`,
         update,
       })}
 

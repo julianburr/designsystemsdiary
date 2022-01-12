@@ -1,12 +1,16 @@
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { BREAKPOINTS } from "src/theme";
+import { CloseButton } from "src/components/close-button";
+import { HamburgerButton } from "src/components/hamburger-button";
+import { toggleGlobalSearch } from "src/components/global-search";
+import { Tooltip } from "src/components/tooltip";
 
-import { HamburgerButton } from "./hamburger-button";
-import { CloseButton } from "./close-button";
-import { useRouter } from "next/router";
+import SearchSvg from "src/assets/icons/search.svg";
+import CommandSvg from "src/assets/icons/command.svg";
 
 const Container = styled.header<{ active: boolean }>`
   width: 100%;
@@ -16,6 +20,7 @@ const Container = styled.header<{ active: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 
   ${BREAKPOINTS.TABLET} {
     padding: 3.2rem;
@@ -65,13 +70,6 @@ const Container = styled.header<{ active: boolean }>`
       }
     }
 
-    button {
-      position: absolute;
-      top: 3.6rem;
-      right: 3.2rem;
-      color: inherit;
-    }
-
     ul {
       display: flex;
       flex-direction: column;
@@ -89,10 +87,18 @@ const Container = styled.header<{ active: boolean }>`
         padding: 0;
         margin: 0 0 0 2.4rem;
 
-        a {
+        a,
+        button {
+          display: flex;
           text-decoration: none;
-          color: inherit;
+          font: inherit;
           font-size: 4.8rem;
+          color: inherit;
+          margin: 0;
+          padding: 0;
+          background: transparent;
+          border: 0 none;
+          text-decoration: none;
 
           ${BREAKPOINTS.TABLET} {
             font-size: 2.2rem;
@@ -101,38 +107,82 @@ const Container = styled.header<{ active: boolean }>`
           &:hover {
             text-decoration: underline;
           }
+
+          & svg {
+            height: 3.2rem;
+            width: auto;
+          }
         }
       }
     }
   }
-
-  button {
-    display: flex;
-
-    ${BREAKPOINTS.TABLET} {
-      display: none;
-    }
-  }
 `;
 
-const Logo = styled.div`
-  & a {
-    text-decoration: none;
+const WrapClose = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 3.2rem;
+  display: flex;
+
+  ${BREAKPOINTS.TABLET} {
+    display: none;
+  }
+
+  button {
     color: inherit;
   }
 `;
 
-const SkipLink = styled.a`
-  display: flex;
+const WrapCloseInner = styled(WrapClose)`
+  top: 4.6rem;
+  right: 4rem;
+`;
+
+const Logo = styled.div`
+  font-size: 2.8rem;
+  line-height: 1.1;
   font-family: Staatliches;
-  margin: 0 0 0 2.4rem;
-  color: inherit;
-  text-decoration: none;
+
+  ${BREAKPOINTS.TABLET} {
+    font-size: 3.2rem;
+  }
+
+  & a {
+    color: inherit;
+    text-decoration: none;
+  }
+`;
+
+const SkipLink = styled.a`
+  font-family: Staatliches;
   transition: opacity 0.2s;
   opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #222;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
 
   &:focus {
     opacity: 1;
+  }
+`;
+
+const TabletLi = styled.li`
+  display: none;
+
+  ${BREAKPOINTS.TABLET} {
+    display: flex;
+  }
+`;
+
+const MobileLi = styled.li`
+  display: flex;
+
+  ${BREAKPOINTS.TABLET} {
+    display: none;
   }
 `;
 
@@ -150,22 +200,26 @@ export function Header() {
 
   return (
     <Container active={active}>
+      <SkipLink href="#main-content">Skip to main content</SkipLink>
+
       <Logo>
         <Link href="/">
-          <a>
-            <h1>Design Systems Diary</h1>
-          </a>
+          <a>Design Systems Diary</a>
         </Link>
       </Logo>
 
-      <SkipLink href="#main-content">Skip navigation</SkipLink>
-
       <menu>
-        <CloseButton
-          aria-label="Close mobile menu"
-          onClick={() => setActive(false)}
-        />
+        <WrapCloseInner>
+          <CloseButton
+            aria-label="Close mobile menu"
+            onClick={() => setActive(false)}
+          />
+        </WrapCloseInner>
         <ul>
+          <MobileLi>
+            <Link href="/">Home</Link>
+          </MobileLi>
+
           <li>
             <Link href="/diary">Diary</Link>
           </li>
@@ -178,15 +232,49 @@ export function Header() {
           <li>
             <Link href="/resources">Resources</Link>
           </li>
+
+          <TabletLi>
+            <Tooltip
+              content={
+                <>
+                  Search (<CommandSvg /> + k)
+                </>
+              }
+              placement="bottom"
+            >
+              {({ elementRef, ...props }) => (
+                <button
+                  {...props}
+                  ref={elementRef}
+                  onClick={() => toggleGlobalSearch()}
+                >
+                  <SearchSvg aria-label="Open global search" />
+                </button>
+              )}
+            </Tooltip>
+          </TabletLi>
+
+          <MobileLi>
+            <button
+              onClick={() => {
+                setActive(false);
+                toggleGlobalSearch();
+              }}
+            >
+              Search
+            </button>
+          </MobileLi>
         </ul>
       </menu>
 
-      <HamburgerButton
-        aria-label="Open mobile menu"
-        onClick={() => setActive(true)}
-      >
-        <span />
-      </HamburgerButton>
+      <WrapClose>
+        <HamburgerButton
+          aria-label="Open mobile menu"
+          onClick={() => setActive(true)}
+        >
+          <span />
+        </HamburgerButton>
+      </WrapClose>
     </Container>
   );
 }

@@ -10,6 +10,7 @@ import { Header } from "src/components/header";
 import faviconPng from "src/assets/favicon.png";
 import "src/assets/fonts/staatliches.css";
 import { Footer } from "src/components/footer";
+import { GlobalSearch } from "src/components/global-search";
 
 const Content = styled.div`
   width: 100%;
@@ -77,6 +78,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Header />
         <Component {...pageProps} />
         <Footer />
+
+        <GlobalSearch />
       </Content>
     </>
   );
