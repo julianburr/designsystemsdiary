@@ -2,6 +2,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import classnames from "classnames";
 import { BREAKPOINTS } from "src/theme";
+import { useRouter } from "next/router";
 
 const Menu = styled.menu`
   display: none;
@@ -36,6 +37,10 @@ const Menu = styled.menu`
         line-height: 1.2;
         font-weight: 400;
 
+        &:hover {
+          text-decoration: underline;
+        }
+
         &:hover,
         &.active {
           opacity: 1;
@@ -68,13 +73,14 @@ type NavigationProps = {
 };
 
 export function PageNavigation({ items = [], currentPart }: NavigationProps) {
+  const router = useRouter();
   return (
     <Menu>
       <ul>
         {items.map((item, index) => (
           <li key={index}>
             <Link href={item.url}>
-              <a className={classnames({ active: item.part === currentPart })}>
+              <a className={classnames({ active: item.url === router.asPath })}>
                 <Part>{(item.part || 0).toString().padStart(2, "0")}</Part> —{" "}
                 {item.title}
               </a>

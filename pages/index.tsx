@@ -1,17 +1,8 @@
 import Link from "next/link";
 import styled from "styled-components";
-import * as path from "path";
-import * as fs from "fs";
-import matter from "gray-matter";
-import getReadingTime from "reading-time";
 
 import { BREAKPOINTS } from "src/theme";
-import { glob } from "src/utils/glob";
 
-import BookSvg from "src/assets/icons/book.svg";
-import AwardSvg from "src/assets/icons/award.svg";
-import FileSvg from "src/assets/icons/file-text.svg";
-import ArchiveSvg from "src/assets/icons/archive.svg";
 import { DiaryItem } from "src/components/slideshow/items/diary";
 import { Slideshow } from "src/components/slideshow";
 import { TutorialItem } from "src/components/slideshow/items/tutorial";
@@ -19,6 +10,11 @@ import { ResourceItem } from "src/components/slideshow/items/resource";
 import { Tags } from "src/components/tags";
 import { AllContentMeta, getContentMeta } from "src/utils/content";
 import { Spacer } from "src/components/spacer";
+
+import DiarySvg from "src/assets/icons/diary.svg";
+import TutorialSvg from "src/assets/icons/online-learning.svg";
+import ResourceSvg from "src/assets/icons/internet.svg";
+import GlossarySvg from "src/assets/icons/glossary.svg";
 
 const Banner = styled.div`
   width: 100%;
@@ -97,11 +93,11 @@ const Card = styled.li`
       margin: 0 0 -0.6rem;
 
       svg {
-        height: auto;
-        width: 1.3em;
-        margin: 0 0.8rem 0 0;
-        color: #b06453;
-        transition: transform 0.2s;
+        height: 1.5em;
+        width: auto;
+        margin: -0.2rem 1rem 0 0;
+        transition: transform 0.2s, opacity 0.2s;
+        opacity: 0.5;
       }
     }
 
@@ -114,6 +110,7 @@ const Card = styled.li`
 
         svg {
           transform: scale(1.1);
+          opacity: 1;
         }
       }
     }
@@ -147,7 +144,7 @@ export default function Homepage({ content }: HomepageProps) {
             <Link href="/diary" passHref>
               <a>
                 <h2>
-                  <BookSvg role="presentation" />
+                  <DiarySvg role="presentation" />
                   <span>Diary</span>
                 </h2>
                 <p>
@@ -161,7 +158,7 @@ export default function Homepage({ content }: HomepageProps) {
             <Link href="/tutorials" passHref>
               <a>
                 <h2>
-                  <AwardSvg role="presentation" />
+                  <TutorialSvg role="presentation" />
                   <span>Tutorials</span>
                 </h2>
                 <p>
@@ -175,7 +172,7 @@ export default function Homepage({ content }: HomepageProps) {
             <Link href="/glossary" passHref>
               <a>
                 <h2>
-                  <FileSvg />
+                  <GlossarySvg />
                   <span>Glossary</span>
                 </h2>
                 <p>
@@ -189,7 +186,7 @@ export default function Homepage({ content }: HomepageProps) {
             <Link href="/resources" passHref>
               <a>
                 <h2>
-                  <ArchiveSvg />
+                  <ResourceSvg />
                   <span>Resources</span>
                 </h2>
                 <p>
