@@ -137,7 +137,6 @@ export function Slideshow({ children }: PropsWithChildren<Record<never, any>>) {
 
   useEffect(() => {
     function measureMeta() {
-      console.log("hello");
       setMeta({
         clientWidth: containerRef.current?.clientWidth || 0,
         scrollWidth: containerRef.current?.scrollWidth || 0,

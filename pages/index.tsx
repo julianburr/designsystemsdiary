@@ -135,7 +135,6 @@ type HomepageProps = {
 };
 
 export default function Homepage({ content }: HomepageProps) {
-  console.log({ content });
   return (
     <>
       <Banner>
