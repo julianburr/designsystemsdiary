@@ -1,12 +1,13 @@
 import * as path from "path";
 import * as fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import lunr, { Index } from "lunr";
-import glob from "glob";
+import lunr from "lunr";
 import matter from "gray-matter";
 import { remark } from "remark";
 import mdx from "remark-mdx";
 import strip from "remark-mdx-to-plain-text";
+
+import { glob } from "src/utils/glob";
 
 const contentPath = path.resolve(process.cwd(), "./content");
 const globPath = path.resolve(process.cwd(), "./content/**/*.mdx");
@@ -22,17 +23,6 @@ function parseMdx(content: string): Promise<string> {
         }
         yay(String(file));
       });
-  });
-}
-
-function globPromise(pattern: string): Promise<string[]> {
-  return new Promise((yay, nah) => {
-    glob(globPath, async (err, files) => {
-      if (err) {
-        return nah(err);
-      }
-      yay(files);
-    });
   });
 }
 
@@ -63,7 +53,7 @@ async function search(terms: string[]) {
   }
 
   // Creating the search index based on all markdown files
-  const files = await globPromise(globPath);
+  const files = await glob(globPath);
 
   for (const filePath of files) {
     const relPath = filePath.replace(contentPath, "");

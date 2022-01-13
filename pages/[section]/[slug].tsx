@@ -12,24 +12,7 @@ import { NewsletterForm } from "src/components/newsletter-form";
 import { Hr } from "src/components/mdx/hr";
 import { Markdown } from "src/components/markdown";
 import { SkeletonText } from "src/components/skeleton/text";
-
-const WrapContent = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-`;
-
-const Content = styled.div`
-  width: 100%;
-
-  h1 {
-    line-height: 1.1;
-    font-size: 4.8rem;
-
-    ${BREAKPOINTS.TABLET} {
-      font-size: 6.2rem;
-    }
-  }
-`;
+import { ContentLayout } from "src/components/layouts/content";
 
 const Subtitle = styled.p`
   margin-top: 0.8rem;
@@ -65,13 +48,12 @@ type ContentProps = {
   source: any;
 };
 
-export default function Page({ params, navItems, meta, source }: ContentProps) {
+export default function Page({ navItems, meta, source }: ContentProps) {
   if (meta.draft) {
     return (
-      <main id="main-content">
-        <WrapContent>
-          <PageNavigation items={navItems} currentPart={meta.part} />
-          <Content>
+      <ContentLayout
+        left={
+          <>
             <h1>{meta.title}</h1>
             {meta.subtitle && (
               <Subtitle role="doc-subtitle">{meta.subtitle}</Subtitle>
@@ -81,19 +63,26 @@ export default function Page({ params, navItems, meta, source }: ContentProps) {
             <Hr />
             <NewsletterForm
               align="center"
-              title="This article has not been finished yet. Do you want to get notified when it is?"
+              title={
+                `This article has not been finished yet. ` +
+                `Do you want to get notified when it is?`
+              }
             />
-          </Content>
-        </WrapContent>
-      </main>
+          </>
+        }
+        right={
+          <>
+            <PageNavigation items={navItems} currentPart={meta.part} />
+          </>
+        }
+      />
     );
   }
 
   return (
-    <main id="main-content">
-      <WrapContent>
-        <PageNavigation items={navItems} currentPart={meta.part} />
-        <Content>
+    <ContentLayout
+      left={
+        <>
           <h1>{meta.title}</h1>
           {meta.subtitle && (
             <Subtitle role="doc-subtitle">{meta.subtitle}</Subtitle>
@@ -108,9 +97,14 @@ export default function Page({ params, navItems, meta, source }: ContentProps) {
 
           <Hr />
           <NewsletterForm align="center" />
-        </Content>
-      </WrapContent>
-    </main>
+        </>
+      }
+      right={
+        <>
+          <PageNavigation items={navItems} currentPart={meta.part} />
+        </>
+      }
+    />
   );
 }
 

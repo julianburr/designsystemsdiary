@@ -1,38 +1,44 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { useForm } from "react-cool-form";
+import { BREAKPOINTS } from "src/theme";
 
 const Wrapper = styled.div<{ align?: string }>`
   width: 100%;
-  max-width: 45rem;
   margin: 0 auto;
   text-align: ${(props) => props.align};
+
+  ${BREAKPOINTS.TABLET} {
+    max-width: 45rem;
+  }
+
+  p {
+    margin: 0;
+    padding: 0.6rem 0 1.2rem;
+  }
 `;
 
-const Container = styled.div`
+const Container = styled.div<{ layout: string }>`
   width: 100%;
   background: #83ded8;
   padding: 1.6rem;
 
   form {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    gap: 0.4rem;
+    grid-template-columns: ${(props) =>
+      props.layout === "small" ? "1fr" : "auto auto"};
   }
 
   input {
-    display: flex;
-    flex: 1;
     border: 0 none;
     background: rgba(255, 255, 255, 0.5);
     height: 3.6rem;
     padding: 0 1.2rem;
-    margin: 0 0.4rem 0 0;
   }
 
   button {
-    display: flex;
-    align-items: center;
     background: #4ed0c7;
     border: 0 none;
     font-family: Staatliches;
@@ -129,8 +135,23 @@ export function NewsletterForm({
     },
   });
 
+  // A bit hacky, but until CSS container queries are a thing this was the best
+  // I could come up with to change the layout of the form based on the container
+  // width, so that the component can be used in the main content area as well as
+  // the sidebar
+  const [layout, setLayout] = useState("large");
+  const wrapperRef = useRef<HTMLElement>();
+  useEffect(() => {
+    const element: any = wrapperRef.current;
+    const resizeObserver = new ResizeObserver((entries) => {
+      setLayout(entries[0].target.clientWidth < 400 ? "small" : "large");
+    });
+    resizeObserver.observe(element);
+    return () => resizeObserver.unobserve(element);
+  }, []);
+
   return (
-    <Wrapper align={align}>
+    <Wrapper align={align} ref={wrapperRef as any}>
       <h2>{title}</h2>
       <p>
         Simply enter your email adress below to subscribe to our mailing list,
@@ -149,7 +170,7 @@ export function NewsletterForm({
           receive notifications from us about new content.
         </SuccessContainer>
       ) : (
-        <Container>
+        <Container layout={layout}>
           <form ref={form} method="POST">
             <input type="hidden" name="u" value="b3332854e2f6138457fa2e830" />
             <input type="hidden" name="id" value="f25a5ffb08" />
