@@ -1,4 +1,10 @@
-import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 
 const Container = styled.ul`
@@ -77,7 +83,6 @@ const Container = styled.ul`
 const Scrollbar = styled.div<{
   clientWidth: number;
   scrollWidth: number;
-  scrollPosition: number;
 }>`
   display: flex;
   height: 0.1rem;
@@ -86,7 +91,7 @@ const Scrollbar = styled.div<{
   background: #ccc;
   margin: 0 0 1.6rem;
 
-  &:before {
+  span {
     content: " ";
     display: flex;
     width: ${(props) =>
@@ -95,14 +100,6 @@ const Scrollbar = styled.div<{
     background: currentColor;
     position: relative;
     transition: left 0.1s;
-    left: ${(props) => {
-      const width = Math.min(props.clientWidth / props.scrollWidth, 1) * 100;
-      const maxScroll = props.scrollWidth - props.clientWidth;
-      if (maxScroll <= 0) {
-        return 0;
-      }
-      return `${(props.scrollPosition / maxScroll) * (100 - width)}%`;
-    }};
   }
 `;
 
@@ -114,20 +111,38 @@ export function Slideshow({ children }: PropsWithChildren<Record<never, any>>) {
   const [meta, setMeta] = useState<{
     clientWidth: number;
     scrollWidth: number;
-    scrollPosition: number;
   }>({
     clientWidth: 0,
     scrollWidth: 0,
-    scrollPosition: 0,
   });
+
+  const barRef = useRef<HTMLElement>();
+  const scrollRef = useRef<HTMLElement>();
+  const setScrollPosition = useCallback(
+    (scrollPosition = 0) => {
+      if (!barRef.current) {
+        return;
+      }
+
+      const width = Math.min(meta.clientWidth / meta.scrollWidth, 1) * 100;
+      const maxScroll = meta.scrollWidth - meta.clientWidth;
+
+      const progress =
+        maxScroll <= 0 ? 0 : (scrollPosition / maxScroll) * (100 - width);
+      barRef.current.style.left = `${progress}%`;
+
+      scrollRef.current?.setAttribute(
+        "aria-valuenow",
+        scrollPosition.toString()
+      );
+    },
+    [meta.clientWidth, meta.scrollWidth]
+  );
 
   const containerRef = useRef<HTMLElement>();
   useEffect(() => {
     function handleScroll(e: any) {
-      setMeta((meta) => ({
-        ...meta,
-        scrollPosition: e.target.scrollLeft,
-      }));
+      setScrollPosition(e.target.scrollLeft);
     }
 
     containerRef?.current?.addEventListener("scroll", handleScroll);
@@ -140,8 +155,8 @@ export function Slideshow({ children }: PropsWithChildren<Record<never, any>>) {
       setMeta({
         clientWidth: containerRef.current?.clientWidth || 0,
         scrollWidth: containerRef.current?.scrollWidth || 0,
-        scrollPosition: containerRef.current?.scrollLeft || 0,
       });
+      setScrollPosition(containerRef.current?.scrollLeft);
     }
 
     measureMeta();
@@ -152,6 +167,7 @@ export function Slideshow({ children }: PropsWithChildren<Record<never, any>>) {
   return (
     <>
       <Scrollbar
+        ref={scrollRef as any}
         role="scrollbar"
         aria-saria-controls={`slideshow-${instanceUuid}`}
         aria-orientation="horizontal"
@@ -161,11 +177,11 @@ export function Slideshow({ children }: PropsWithChildren<Record<never, any>>) {
             : 0
         }
         aria-valuemin={0}
-        aria-valuenow={meta.scrollPosition}
         clientWidth={meta.clientWidth}
         scrollWidth={meta.scrollWidth}
-        scrollPosition={meta.scrollPosition}
-      />
+      >
+        <span ref={barRef as any} />
+      </Scrollbar>
       <Container id={`slideshow-${instanceUuid}`} ref={containerRef as any}>
         {children}
       </Container>
