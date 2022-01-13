@@ -12,13 +12,9 @@ const Menu = styled.menu`
     align-self: start;
     justify-self: start;
     flex-shrink: 0;
-    margin: 0 0 0 4rem;
+    margin: 0;
     padding: 0;
-    width: 22rem;
-  }
-
-  ${BREAKPOINTS.DESKTOP} {
-    width: 28rem;
+    width: 100%;
   }
 
   ul {

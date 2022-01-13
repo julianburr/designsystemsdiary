@@ -36,7 +36,6 @@ export default async function handler(
       .json({ status: "error", message: "Credentials not found." });
   }
 
-  console.log({ req });
   const { email, source } = req.body;
 
   // Return error if email is not specified

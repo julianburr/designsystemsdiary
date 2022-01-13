@@ -98,7 +98,7 @@ export function PageMeta({ tags = [], readingTime, title }: PageMetaProps) {
   const handleCopy = useCallback((updateTooltipPosition: UpdateFn | null) => {
     clearTimeout(copyTimer);
     setCopied(true);
-    // updateTooltipPosition?.();
+    updateTooltipPosition?.();
 
     const copyText: any = copyInputRef.current;
     copyText.select();
@@ -106,8 +106,7 @@ export function PageMeta({ tags = [], readingTime, title }: PageMetaProps) {
 
     copyTimer = setTimeout(() => {
       setCopied(false);
-      console.log({ updateTooltipPosition });
-      // updateTooltipPosition?.();
+      updateTooltipPosition?.();
     }, 3000);
   }, []);
 

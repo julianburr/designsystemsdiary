@@ -34,6 +34,7 @@ export const GlobalStyles = createGlobalStyle`
     font-family: Staatliches;
     margin: 0;
     padding: 0;
+    line-height: 1.2;
   }
 
   h1 {
@@ -68,5 +69,13 @@ export const GlobalStyles = createGlobalStyle`
 
   a:hover {
     text-decoration: underline;
+  }
+
+  main h1 {
+    font-size: 4.8rem;
+
+    ${BREAKPOINTS.TABLET} {
+      font-size: 6.2rem;
+    }
   }
 `;
